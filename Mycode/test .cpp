@@ -1,21 +1,31 @@
+#include <vector>
+using namespace std;
+
 class Solution
 {
 public:
-    int mySqrt(int x)
+    int removeDuplicates(vector<int> &nums)
     {
-        if (x < 2)
-            return x;
-        long long guess = x; // 首次猜测值
-
-        while (guess * guess > x)
+        int size = nums.size();
+        int slowIndex = 0;
+        int fastIndex = 1;
+        bool check = 1;
+        for (; fastIndex < size; fastIndex++)
         {
-            guess = (guess + x / guess) / 2;
+            if (nums[fastIndex] == nums[slowIndex] && check)
+            {
+                for (int i = fastIndex; i < size - 1; i++)
+                {
+                    nums[i] = nums[i + 1];
+                }
+                size--;
+                fastIndex--;
+            }
+            else
+            {
+                slowIndex++;
+            }
         }
-        return (int)guess;
+        return size;
     }
 };
-
-int main()
-{
-    return 0;
-}
