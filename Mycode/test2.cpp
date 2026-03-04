@@ -5,29 +5,44 @@ using namespace std;
 class Solution
 {
 public:
-    vector<int> twoSum(vector<int> &numbers, int target)
+    int search(vector<int> &nums, int target)
     {
-        for (int i = 0; i < numbers.size(); i++)
+        int left = 0, right = nums.size() - 1;
+
+        while (left <= right)
         {
-            int low = i + 1;
-            int high = numbers.size() - 1;
-            while (low <= high)
+            int mid = left + (right - left) / 2;
+
+            if (nums[mid] == target)
             {
-                int mid = low + (high - low) / 2;
-                if (numbers[mid] + numbers[i] == target)
+                return mid;
+            }
+
+            // 判断哪一半是有序的
+            if (nums[left] <= nums[mid])
+            { // 左半部分有序
+                if (target >= nums[left] && target < nums[mid])
                 {
-                    return {i + 1, mid + 1};
-                }
-                else if (numbers[mid] + numbers[i] < target)
-                {
-                    low = mid + 1;
+                    right = mid - 1; // target在左半
                 }
                 else
                 {
-                    high = mid - 1;
+                    left = mid + 1; // target在右半
+                }
+            }
+            else
+            { // 右半部分有序
+                if (target > nums[mid] && target <= nums[right])
+                {
+                    left = mid + 1; // target在右半
+                }
+                else
+                {
+                    right = mid - 1; // target在左半
                 }
             }
         }
-        return {-1, -1};
+
+        return -1;
     }
 };
