@@ -1,66 +1,46 @@
 #include <vector>
 #include <string>
+#include <iostream>
+#include <algorithm>
 using namespace std;
+
+struct ListNode
+{
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {} // 初始化x
+};
 
 class Solution
 {
 public:
-    bool searchMatrix(vector<vector<int>> &matrix, int target)
+    bool hasCycle(ListNode *head)
     {
-        int m = matrix.size();    // m行
-        int n = matrix[0].size(); // n列
-
-        vector<int> perLineMax; // 每行最后一列--最大值
-        for (int i = 0; i < m; i++)
+        // 无头节点，或只有头节点
+        if (head == nullptr || head->next == nullptr)
         {
-            perLineMax.push_back(matrix[i][n - 1]);
-        }
-
-        // 找target可能在哪行
-        // 找第一个 > target 的元素
-        int line;
-        int low = 0;
-        int high = m - 1;
-        int mid;
-        while (low <= high)
-        {
-            mid = low + (high - low) / 2;
-            if (perLineMax[mid] < target)
-            {
-                low = mid + 1;
-            }
-            else if (perLineMax[mid] > target)
-            {
-                high = mid - 1;
-            }
-            else
-            {
-                return 1;
-            }
-        }
-        if (low > m - 1)
             return 0;
+        }
 
-        line = low;
+        // 快慢指针
+        ListNode *slow = head;
+        ListNode *fast = head;
 
-        int l = 0;
-        int r = n - 1;
-        while (l <= r)
+        // 快指针本身不越界，快指针下一个节点也不越界，即快指针只能停留在最后一个节点
+        while (fast != nullptr && fast->next != nullptr)
         {
-            mid = l + (r - l) / 2;
-            if (matrix[line][mid] == target)
+            // 注意这里移动不能用++和--，因为是链表，不是数组
+            slow = slow->next;
+            fast = fast->next->next;
+
+            // 如果快慢指针相遇，说明是环
+            if (slow == fast)
             {
                 return 1;
             }
-            else if (matrix[line][mid] < target)
-            {
-                l = mid + 1;
-            }
-            else
-            {
-                r = mid - 1;
-            }
         }
+
+        // 循环结束还没相遇，则无环
         return 0;
     }
 };
